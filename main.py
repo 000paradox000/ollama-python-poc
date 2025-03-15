@@ -4,7 +4,10 @@ from libs.llm_handler import LLMHandler
 def main():
     handler = LLMHandler()
 
-    print(handler.make_a_dummy_question())
+    # print(handler.make_a_dummy_question())
+    # print(handler.make_a_dummy_question_langchain())
+    # print(handler.make_a_dummy_question_langchain_messages())
+    print(handler.make_a_dummy_question_langchain_messages_streaming())
 
 
 if __name__ == "__main__":

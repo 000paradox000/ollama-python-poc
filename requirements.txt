@@ -1,5 +1,7 @@
 # LLM
 ollama
+langchain
+langchain-ollama
 
 # Dev
 pre-commit

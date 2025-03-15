@@ -35,3 +35,4 @@ python main.py
 
 - https://github.com/ollama/ollama-python
 - https://python.langchain.com/docs/introduction/
+- https://python.langchain.com/docs/integrations/chat/ollama/
