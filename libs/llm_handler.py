@@ -2,6 +2,7 @@ from ollama import chat
 from ollama import ChatResponse
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate
 
 
 class LLMHandler:
@@ -102,3 +103,40 @@ class LLMHandler:
 
         print("-" * 50)
         return "".join(output)
+
+    def make_a_dummy_question_langchain_messages_template(self) -> str:
+        """
+        Sends a predefined dummy question to the chat model using a system
+        and human message structure with a templated system message.
+
+        The system message dynamically sets the model's role as a comics
+        expert, and the human message contains the dummy question.
+
+        Returns:
+            str: The content of the model's response.
+        """
+        model = init_chat_model(self.MODEL_NAME, model_provider="ollama")
+
+        system_template = (
+            "You are a {target} expert. Please answer the user's question."
+        )
+
+        prompt_template = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_template),
+                ("human", "{question}"),
+            ]
+        )
+
+        prompt = prompt_template.invoke(
+            {
+                "target": "comics",
+                "question": self.DUMMY_QUESTION,
+            }
+        )
+
+        # messages = prompt.to_messages()
+        #
+        # return model.invoke(messages).content
+
+        return model.invoke(prompt).content
