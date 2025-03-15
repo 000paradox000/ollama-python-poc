@@ -36,3 +36,4 @@ python main.py
 - https://github.com/ollama/ollama-python
 - https://python.langchain.com/docs/introduction/
 - https://python.langchain.com/docs/integrations/chat/ollama/
+- https://www.researchgate.net/publication/355870529_About_Dogs

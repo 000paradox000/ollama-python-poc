@@ -1,8 +1,13 @@
+from pathlib import Path
+
 from ollama import chat
-from ollama import ChatResponse
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_ollama import OllamaEmbeddings
+from langchain_chroma import Chroma
 
 
 class LLMHandler:
@@ -17,6 +22,35 @@ class LLMHandler:
     MODEL_NAME: str = "gemma3:1b"
     DUMMY_QUESTION: str = "is the creator of dragon ball z alive"
 
+    @property
+    def dogs_pdf(self) -> Path:
+        """
+        Returns the path to the 'About Dogs' PDF file.
+
+        The file is expected to be located in the 'files/input' directory
+        relative to the project's base directory.
+
+        Returns:
+            Path: The absolute path to the 'About Dogs' PDF.
+        """
+        input_files_dir = self.base_dir / "files" / "input"
+        return input_files_dir / "About_Dogs-Nicolae_Sfetcu-CCNS.pdf"
+
+    from pathlib import Path
+
+    @property
+    def base_dir(self) -> Path:
+        """
+        Returns the base directory of the project.
+
+        The base directory is determined as the parent of the directory
+        containing this file.
+
+        Returns:
+            Path: The absolute path to the project's base directory.
+        """
+        return Path(__file__).resolve().parent.parent
+
     def make_a_dummy_question(self) -> str:
         """
         Sends a predefined question to the chat model and returns the response.
@@ -24,7 +58,7 @@ class LLMHandler:
         Returns:
             str: The content of the model's response.
         """
-        response: ChatResponse = chat(
+        response = chat(
             model=self.MODEL_NAME,
             messages=[
                 {"role": "user", "content": self.DUMMY_QUESTION},
@@ -140,3 +174,25 @@ class LLMHandler:
         # return model.invoke(messages).content
 
         return model.invoke(prompt).content
+
+    def query_document(self, query: str) -> str:
+        loader = PyPDFLoader(self.dogs_pdf)
+        docs = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=200,
+            add_start_index=True,
+        )
+        all_splits = text_splitter.split_documents(docs)
+
+        embeddings = OllamaEmbeddings(model=self.MODEL_NAME)
+
+        persist_directory = self.base_dir / "files" / "output"
+
+        vector_store = Chroma(
+            embedding_function=embeddings,
+            persist_directory=persist_directory.as_posix(),
+        )
+        _ = vector_store.add_documents(documents=all_splits)
+
+        return f"{len(all_splits)}"

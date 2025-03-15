@@ -2,6 +2,9 @@
 ollama
 langchain
 langchain-ollama
+langchain-community
+pypdf
+langchain-chroma
 
 # Dev
 pre-commit
