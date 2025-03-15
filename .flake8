@@ -1,0 +1,20 @@
+[flake8]
+max-line-length = 79
+ignore = E402, W503
+
+per-file-ignores =
+    # Django settings
+    */settings/*: E501, F405, F401, F403
+
+    # Tests
+    */tests/*: F401,W503,F841,E501,F403,F405
+    */tests.py: F401
+
+    # Django admin
+    */admin.py: F401
+
+    # Django views
+    */views.py: F401
+
+    # Django models
+    */models.py: F401

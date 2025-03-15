@@ -1,0 +1,5 @@
+# LLM
+ollama
+
+# Dev
+pre-commit
