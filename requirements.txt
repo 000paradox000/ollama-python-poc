@@ -5,6 +5,7 @@ langchain-ollama
 langchain-community
 pypdf
 langchain-chroma
+pydantic
 
 # Dev
 pre-commit

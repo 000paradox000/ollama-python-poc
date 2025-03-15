@@ -11,6 +11,7 @@ can help.
 
 ```shell
 ollama pull gemma3:1b
+ollama pull mxbai-embed-large
 ```
 
 3. Create virtualenv

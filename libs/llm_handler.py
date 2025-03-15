@@ -20,23 +20,22 @@ class LLMHandler:
     """
 
     MODEL_NAME: str = "gemma3:1b"
+    EMBEDDING_MODEL_NAME: str = "mxbai-embed-large"
     DUMMY_QUESTION: str = "is the creator of dragon ball z alive"
 
     @property
-    def dogs_pdf(self) -> Path:
+    def pdf_path(self) -> Path:
         """
-        Returns the path to the 'About Dogs' PDF file.
+        Returns the path to the PDF file.
 
         The file is expected to be located in the 'files/input' directory
         relative to the project's base directory.
 
         Returns:
-            Path: The absolute path to the 'About Dogs' PDF.
+            Path: The absolute path to the PDF.
         """
         input_files_dir = self.base_dir / "files" / "input"
-        return input_files_dir / "About_Dogs-Nicolae_Sfetcu-CCNS.pdf"
-
-    from pathlib import Path
+        return input_files_dir / "song.pdf"
 
     @property
     def base_dir(self) -> Path:
@@ -176,7 +175,7 @@ class LLMHandler:
         return model.invoke(prompt).content
 
     def query_document(self, query: str) -> str:
-        loader = PyPDFLoader(self.dogs_pdf)
+        loader = PyPDFLoader(self.pdf_path)
         docs = loader.load()
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
@@ -185,7 +184,7 @@ class LLMHandler:
         )
         all_splits = text_splitter.split_documents(docs)
 
-        embeddings = OllamaEmbeddings(model=self.MODEL_NAME)
+        embeddings = OllamaEmbeddings(model=self.EMBEDDING_MODEL_NAME)
 
         persist_directory = self.base_dir / "files" / "output"
 
